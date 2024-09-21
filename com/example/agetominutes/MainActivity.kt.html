@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>MainActivity.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.agetominutes</span>
+
+<span class="s1">import android.app.DatePickerDialog</span>
+<span class="s1">import androidx.appcompat.app.AppCompatActivity</span>
+<span class="s1">import android.os.Bundle</span>
+<span class="s1">import android.widget.Button</span>
+<span class="s1">import android.widget.TextView</span>
+<span class="s1">import android.widget.Toast</span>
+<span class="s1">import androidx.activity.ComponentActivity</span>
+<span class="s1">import java.text.SimpleDateFormat</span>
+<span class="s1">import java.util.Calendar</span>
+<span class="s1">import java.util.Locale</span>
+
+<span class="s0">class </span><span class="s1">MainActivity : ComponentActivity() {</span>
+
+    <span class="s1">private </span><span class="s0">var </span><span class="s1">tvSelectedDate : TextView? = </span><span class="s0">null</span>
+    <span class="s1">private </span><span class="s0">var </span><span class="s1">tvAgeInMinutes : TextView? = </span><span class="s0">null</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onCreate(savedInstanceState: Bundle?) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span>
+        <span class="s1">setContentView(R.layout.activity_main)</span>
+
+        <span class="s0">val </span><span class="s1">btnDatePicker : Button = findViewById(R.id.btnDatePicker)</span>
+        <span class="s1">tvSelectedDate = findViewById(R.id.tvSelectedDate)</span>
+        <span class="s1">tvAgeInMinutes = findViewById(R.id.tvAgeInMinutes)</span>
+
+        <span class="s1">btnDatePicker.setOnClickListener{</span>
+            <span class="s1">clickDatePicker()</span>
+        <span class="s1">}</span>
+
+    <span class="s1">}</span>
+
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">clickDatePicker(){</span>
+
+        <span class="s0">val </span><span class="s1">myCalendar = Calendar.getInstance()</span>
+        <span class="s0">val </span><span class="s1">year = myCalendar.get(Calendar.YEAR)</span>
+        <span class="s0">val </span><span class="s1">month = myCalendar.get(Calendar.MONTH)</span>
+        <span class="s0">val </span><span class="s1">day = myCalendar.get(Calendar.DAY_OF_MONTH)</span>
+
+        <span class="s0">val </span><span class="s1">dpd = DatePickerDialog(</span><span class="s0">this,</span><span class="s1">DatePickerDialog.OnDateSetListener{</span>
+                <span class="s1">_</span><span class="s0">, </span><span class="s1">selectedYear</span><span class="s0">, </span><span class="s1">selectedMonth</span><span class="s0">, </span><span class="s1">selectedDayOfMonth -&gt;</span>
+
+            <span class="s1">Toast.makeText(</span><span class="s0">this,</span>
+                <span class="s2">&quot;Selected year is </span><span class="s0">$</span><span class="s1">selectedYear</span><span class="s2">, month is </span><span class="s0">${</span><span class="s1">selectedMonth+</span><span class="s3">1</span><span class="s0">} </span><span class="s2">&quot; </span><span class="s1">+</span>
+                        <span class="s2">&quot;&amp; day is </span><span class="s0">$</span><span class="s1">selectedDayOfMonth</span><span class="s2">&quot; </span><span class="s0">, </span><span class="s1">Toast.LENGTH_LONG).show()</span>
+
+            <span class="s4">// Used to select the date and store the date in selectedDate and display it in the app</span>
+            <span class="s0">val </span><span class="s1">selectedDate = </span><span class="s2">&quot;</span><span class="s0">$</span><span class="s1">selectedDayOfMonth</span><span class="s2">/</span><span class="s0">${</span><span class="s1">selectedMonth+</span><span class="s3">1</span><span class="s0">}</span><span class="s2">/</span><span class="s0">$</span><span class="s1">selectedYear</span><span class="s2">&quot;</span>
+            <span class="s1">tvSelectedDate?.text = selectedDate</span>
+
+            <span class="s0">val </span><span class="s1">sdf= SimpleDateFormat( </span><span class="s2">&quot;dd/mm/yyyy&quot;</span><span class="s0">, </span><span class="s1">Locale.ENGLISH)</span>
+            <span class="s0">val </span><span class="s1">theDate = sdf.parse(selectedDate)</span>
+            <span class="s1">theDate?.let {</span>
+                <span class="s4">// we / time by 1000 to convert it to sec, then div by 60 to make it in min which = 60000</span>
+                <span class="s0">val </span><span class="s1">selectedDateInMinutes = theDate.time / </span><span class="s3">60000</span>
+
+                <span class="s0">val </span><span class="s1">currentDate = sdf.parse(sdf.format(System.currentTimeMillis()))</span>
+
+                <span class="s1">currentDate?.let {</span>
+                    <span class="s0">val </span><span class="s1">currentDateInMinutes = currentDate.time / </span><span class="s3">60000</span>
+
+                    <span class="s0">val </span><span class="s1">differenceInMinutes = currentDateInMinutes - selectedDateInMinutes</span>
+
+                    <span class="s1">tvAgeInMinutes?.text = differenceInMinutes.toString()</span>
+                <span class="s1">}</span>
+
+            <span class="s1">}</span>
+
+        <span class="s1">}</span><span class="s0">,</span>
+            <span class="s1">year</span><span class="s0">,</span>
+            <span class="s1">month</span><span class="s0">,</span>
+            <span class="s1">day)</span>
+
+        <span class="s1">dpd.datePicker.maxDate = System.currentTimeMillis() - </span><span class="s3">84600000 </span><span class="s4">// total milisec in a day</span>
+        <span class="s1">dpd.show()</span>
+    <span class="s1">}</span>
+
+
+<span class="s1">}</span></pre>
+</body>
+</html>
